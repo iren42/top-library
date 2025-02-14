@@ -44,10 +44,39 @@ form.addEventListener("submit", (event) =>
     dialog.close();
 });
 
+document.addEventListener("click", (event) =>
+{
+    if (event.target.classList.contains("delete"))
+    {
+        // console.log(event.target.parentElement);
+        let index = Number(event.target.classList[1]);
+        myLibrary.splice(index, 1);
+        event.target.parentElement.remove();
+        replaceIndexes();
+        console.table(myLibrary);
+    }
+})
+
+function replaceIndexes()
+{
+    let index = 0;
+    let deleteBtnList = document.querySelectorAll(".delete");
+    for (const key in deleteBtnList)
+    {
+        if (Object.prototype.hasOwnProperty.call(deleteBtnList, key))
+        {
+            const element = deleteBtnList[key];
+            if (element.classList[1] != index)
+                element.classList.replace(element.classList[1], index);
+            index++;
+        }
+    }
+}
+
 function addBookToLibrary(library, book)
 {
     if (!Array.isArray(library))
-        return ;
+        return;
     library.push(book);
     addBookToDOM(book);
 }
@@ -55,6 +84,7 @@ function addBookToLibrary(library, book)
 function addBookToDOM(book)
 {
     const domEl = document.createElement("div");
+    domEl.classList.add("book");
     for (const property in book)
     {
         if (Object.prototype.hasOwnProperty.call(book, property)) 
@@ -65,13 +95,16 @@ function addBookToDOM(book)
     }
     if (domEl.textContent !== "")
         document.querySelector("#library").append(domEl);
+    createDeleteBookButton(domEl);
 }
 
 let thehobbit = new Book("The Hobbit", "Tolkien", 430, bookStatus[0]);
 let thelightshop = new Book("The Light Shop", "IDK", 230, bookStatus[1]);
+let misaeng = new Book("Misaeng", "IDK", 21, bookStatus[1]);
 
 addBookToLibrary(myLibrary, thehobbit);
 addBookToLibrary(myLibrary, thelightshop);
+addBookToLibrary(myLibrary, misaeng);
 
 // function displayLibrary()
 // {
@@ -86,7 +119,8 @@ addBookToLibrary(myLibrary, thelightshop);
 //     }
 // }
 
-function clearInputForm(){
+function clearInputForm()
+{
     document.querySelector("#book_form").reset();
 }
 
@@ -102,4 +136,15 @@ function createBook(form)
     }
     let newBook = new Book(buffer[0], buffer[1], Number(buffer[2]), buffer[3]);
     return (newBook);
+}
+
+function createDeleteBookButton(parent)
+{
+    const btn = document.createElement("button");
+    btn.classList.add("delete");
+    if (myLibrary.length < 1)
+        return ;
+    btn.classList.add(myLibrary.length - 1);
+    btn.textContent = "delete";
+    parent.append(btn);
 }
