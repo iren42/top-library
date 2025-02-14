@@ -41,12 +41,13 @@ closeButton.addEventListener("click", (event) =>
 form.addEventListener("submit", (event) =>
 {
     event.preventDefault();
-    let newBook = createBook(form);
+    let newBook = createBookFromForm(form);
     addBookToLibrary(myLibrary, newBook);
     clearInputForm();
     dialog.close();
 });
 
+// event delegation for dynamically created elements
 document.addEventListener("click", (event) =>
 {
     if (event.target.classList.contains("delete"))
@@ -59,6 +60,35 @@ document.addEventListener("click", (event) =>
         console.table(myLibrary);
     }
 })
+
+document.addEventListener("submit", (event) =>
+{
+
+    if (event.target.classList.contains("update_status"))
+    {
+        event.preventDefault();
+        // console.log(event.target);
+        updateStatus(event.target);
+
+    }
+})
+
+function updateStatus(form)
+{
+    let formData = new FormData(form);
+    let newStatus = "";
+
+    for (let pair of formData.entries())
+    {
+        // console.log(pair[0] + ": " + pair[1]);
+        newStatus = pair[1];
+    }
+    // update DOM
+    let oldStatus = form.parentElement.querySelector("span.status");
+    oldStatus.textContent = newStatus;
+    // update myLibrary
+    console.table(myLibrary);
+}
 
 function replaceIndexes()
 {
@@ -88,14 +118,35 @@ function addBookToDOM(book)
 {
     const domEl = document.createElement("div");
     domEl.classList.add("book");
+    let buffer = [];
     for (const property in book)
     {
         if (Object.prototype.hasOwnProperty.call(book, property)) 
         {
-            const element = book[property];
-            domEl.textContent += element + " ";
+            buffer.push(book[property]);
         }
     }
+    const p = document.createElement("p");
+
+    const span = document.createElement("span");
+    span.classList.add("title");
+    span.textContent = buffer.shift();
+
+    const span1 = document.createElement("span");
+    span1.classList.add("author");
+    span1.textContent = buffer.shift();
+
+    const span2 = document.createElement("span")
+    span2.classList.add("nb_pages");
+    span2.textContent = buffer.shift();
+
+    const span3 = document.createElement("span")
+    span3.classList.add("status");
+    span3.textContent = buffer.shift();
+
+    p.append(span, " ", span1, " ", span2, " ", span3);
+    domEl.append(p);
+
     if (domEl.textContent !== "")
         document.querySelector("#library").append(domEl);
     createDeleteBookButton(domEl);
@@ -110,25 +161,12 @@ addBookToLibrary(myLibrary, thehobbit);
 addBookToLibrary(myLibrary, thelightshop);
 addBookToLibrary(myLibrary, misaeng);
 
-// function displayLibrary()
-// {
-//     for (const book in myLibrary)
-//     {
-//         if (Object.prototype.hasOwnProperty.call(myLibrary, book))
-//         {
-//             const aBook = myLibrary[book];
-//             console.log(book);
-//             displayBook(aBook);
-//         }
-//     }
-// }
-
 function clearInputForm()
 {
     document.querySelector("#book_form").reset();
 }
 
-function createBook(form)
+function createBookFromForm(form)
 {
     let formData = new FormData(form);
     let buffer = [];
@@ -156,6 +194,7 @@ function createDeleteBookButton(parent)
 function createChangeStatusButton(parent)
 {
     const form = document.createElement("form");
+    form.classList.add("update_status");
     const fieldset = document.createElement("fieldset");
     const legend = document.createElement("legend");
     legend.textContent = "Status:"
@@ -191,13 +230,14 @@ function createChangeStatusButton(parent)
     to_readLabel.textContent = "to read";
 
     const update = document.createElement("button");
-    update.setAttribute("type", "button");
+    update.setAttribute("type", "submit");
+    update.classList.add("update");
     update.textContent = "update status";
 
     parent.append(form);
     form.append(fieldset, update);
     fieldset.append(legend, div1, div2, div3);
-    div1.append(readLabel, readInput);
-    div2.append(currently_readingLabel, currently_readingInput);
-    div3.append(to_readLabel, to_readInput);
+    div1.append(readInput, readLabel);
+    div2.append(currently_readingInput, currently_readingLabel);
+    div3.append(to_readInput, to_readLabel);
 }
