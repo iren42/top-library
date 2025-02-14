@@ -26,7 +26,8 @@ Book.prototype.info = function ()
         return (this.title + " by " + this.author + ", " + this.nb_pages + " currently reading");
 }
 
-Book.prototype.setStatus = function(newStatus) {
+Book.prototype.setStatus = function (newStatus)
+{
     this.status = newStatus;
 }
 
@@ -71,7 +72,6 @@ document.addEventListener("submit", (event) =>
     if (event.target.classList.contains("update_status"))
     {
         event.preventDefault();
-        // console.log(event.target);
         updateStatus(event.target);
 
     }
@@ -192,7 +192,7 @@ function createDeleteBookButton(parent)
     const btn = document.createElement("button");
     btn.classList.add("delete");
     if (myLibrary.length < 1)
-        return ;
+        return;
     btn.classList.add(myLibrary.length - 1);
     btn.textContent = "delete";
     parent.append(btn);
