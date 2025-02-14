@@ -57,23 +57,19 @@ document.addEventListener("click", (event) =>
 {
     if (event.target.classList.contains("delete"))
     {
-        // console.log(event.target.parentElement);
         let index = Number(event.target.classList[1]);
         myLibrary.splice(index, 1);
         event.target.parentElement.remove();
         replaceIndexes();
-        console.table(myLibrary);
     }
 })
 
 document.addEventListener("submit", (event) =>
 {
-
     if (event.target.classList.contains("update_status"))
     {
         event.preventDefault();
         updateStatus(event.target);
-
     }
 })
 
@@ -191,9 +187,12 @@ function createDeleteBookButton(parent)
 {
     const btn = document.createElement("button");
     btn.classList.add("delete");
+
+    // add index number as a class
     if (myLibrary.length < 1)
         return;
     btn.classList.add(myLibrary.length - 1);
+
     btn.textContent = "delete";
     parent.append(btn);
 }
