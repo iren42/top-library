@@ -23,23 +23,22 @@ Book.prototype.info = function ()
     return (this.title + " by " + this.author + ", " + this.nb_pages + " has not been read yet");
 }
 
-// "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () =>
 {
     dialog.showModal();
 });
 
-// "Close" button closes the dialog
-closeButton.addEventListener("click", () =>
+closeButton.addEventListener("click", (event) =>
 {
+    event.preventDefault();
     clearInputForm();
     dialog.close();
 });
 
-form.addEventListener("submit", event =>
+form.addEventListener("submit", (event) =>
 {
     event.preventDefault();
-    let newBook = getData(form);
+    let newBook = createBook(form);
     addBookToLibrary(myLibrary, newBook);
     clearInputForm();
     dialog.close();
@@ -47,7 +46,6 @@ form.addEventListener("submit", event =>
 
 function addBookToLibrary(library, book)
 {
-    // take params, create a book then store it in the array
     if (!Array.isArray(library))
         return ;
     library.push(book);
@@ -92,7 +90,7 @@ function clearInputForm(){
     document.querySelector("#book_form").reset();
 }
 
-function getData(form)
+function createBook(form)
 {
     let formData = new FormData(form);
     let buffer = [];
