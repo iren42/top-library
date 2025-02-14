@@ -1,5 +1,5 @@
 const myLibrary = [];
-const bookStatus = ["read", "currently_reading", "to_read"];
+const bookStatus = ["to_read", "currently_reading", "read"];
 
 const dialog = document.querySelector("dialog");
 const showButton = document.querySelector("#showDialog");
@@ -18,9 +18,12 @@ function Book(title, author, nb_pages, read)
 
 Book.prototype.info = function ()
 {
-    if (this.read)
+    if (this.read == bookStatus[2])
         return (this.title + " by " + this.author + ", " + this.nb_pages + " has been read");
-    return (this.title + " by " + this.author + ", " + this.nb_pages + " has not been read yet");
+    else if (this.read === bookStatus[0])
+        return (this.title + " by " + this.author + ", " + this.nb_pages + " has not been read yet");
+    else
+        return (this.title + " by " + this.author + ", " + this.nb_pages + " currently reading");
 }
 
 showButton.addEventListener("click", () =>
@@ -96,6 +99,7 @@ function addBookToDOM(book)
     if (domEl.textContent !== "")
         document.querySelector("#library").append(domEl);
     createDeleteBookButton(domEl);
+    createChangeStatusButton(domEl);
 }
 
 let thehobbit = new Book("The Hobbit", "Tolkien", 430, bookStatus[0]);
@@ -143,8 +147,57 @@ function createDeleteBookButton(parent)
     const btn = document.createElement("button");
     btn.classList.add("delete");
     if (myLibrary.length < 1)
-        return ;
+        return;
     btn.classList.add(myLibrary.length - 1);
     btn.textContent = "delete";
     parent.append(btn);
+}
+
+function createChangeStatusButton(parent)
+{
+    const form = document.createElement("form");
+    const fieldset = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+    legend.textContent = "Status:"
+
+    const div1 = document.createElement("div");
+    const readInput = document.createElement("input");
+    readInput.setAttribute("type", "radio");
+    readInput.setAttribute("name", "status");
+    readInput.setAttribute("value", bookStatus[2]);
+
+    const readLabel = document.createElement("label");
+    readLabel.setAttribute("for", "read");
+    readLabel.textContent = "Read";
+
+    const div2 = document.createElement("div");
+    const currently_readingInput = document.createElement("input");
+    currently_readingInput.setAttribute("type", "radio");
+    currently_readingInput.setAttribute("name", "status");
+    currently_readingInput.setAttribute("value", bookStatus[1]);
+
+    const currently_readingLabel = document.createElement("label");
+    currently_readingLabel.setAttribute("for", "currently_reading");
+    currently_readingLabel.textContent = "currently reading";
+
+    const div3 = document.createElement("div");
+    const to_readInput = document.createElement("input");
+    to_readInput.setAttribute("type", "radio");
+    to_readInput.setAttribute("name", "status");
+    to_readInput.setAttribute("value", bookStatus[0]);
+
+    const to_readLabel = document.createElement("label");
+    to_readLabel.setAttribute("for", "to_read");
+    to_readLabel.textContent = "to read";
+
+    const update = document.createElement("button");
+    update.setAttribute("type", "button");
+    update.textContent = "update status";
+
+    parent.append(form);
+    form.append(fieldset, update);
+    fieldset.append(legend, div1, div2, div3);
+    div1.append(readLabel, readInput);
+    div2.append(currently_readingLabel, currently_readingInput);
+    div3.append(to_readLabel, to_readInput);
 }
