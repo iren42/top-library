@@ -7,13 +7,13 @@ const closeButton = document.querySelector("button[value='close']");
 const form = document.querySelector("#book_form");
 const library = document.querySelector("#library");
 
-function Book(title, author, nb_pages, read)
+function Book(title, author, nb_pages, status)
 {
     // the constructor...
     this.title = title;
     this.author = author;
     this.nb_pages = nb_pages;
-    this.read = read;
+    this.status = status;
 }
 
 Book.prototype.info = function ()
@@ -86,19 +86,21 @@ function updateStatus(form)
     // update DOM
     let oldStatus = form.parentElement.querySelector("span.status");
     oldStatus.textContent = newStatus;
-    // update myLibrary
+    // update myLibrary array
+    let index = Number(form.parentElement.querySelector(".delete").classList[1]);
+    myLibrary.at(index).status = newStatus;
     console.table(myLibrary);
 }
 
 function replaceIndexes()
 {
     let index = 0;
-    let bookList = document.querySelectorAll(".book");
-    for (const key in bookList)
+    let indexList = document.querySelectorAll(".delete");
+    for (const key in indexList)
     {
-        if (Object.prototype.hasOwnProperty.call(bookList, key))
+        if (Object.prototype.hasOwnProperty.call(indexList, key))
         {
-            const element = bookList[key];
+            const element = indexList[key];
             if (element.classList[1] != index)
                 element.classList.replace(element.classList[1], index);
             index++;
@@ -119,9 +121,6 @@ function addBookToDOM(book)
     const domEl = document.createElement("div");
     domEl.classList.add("book");
 
-    if (myLibrary.length < 1)
-        return;
-    domEl.classList.add(myLibrary.length - 1);
     let buffer = [];
     for (const property in book)
     {
@@ -188,6 +187,9 @@ function createDeleteBookButton(parent)
 {
     const btn = document.createElement("button");
     btn.classList.add("delete");
+    if (myLibrary.length < 1)
+        return ;
+    btn.classList.add(myLibrary.length - 1);
     btn.textContent = "delete";
     parent.append(btn);
 }
