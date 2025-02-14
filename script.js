@@ -153,7 +153,7 @@ function addBookToDOM(book)
     if (domEl.textContent !== "")
         document.querySelector("#library").append(domEl);
     createDeleteBookButton(domEl);
-    createChangeStatusButton(domEl);
+    createChangeStatusButton(domEl, book.status);
 }
 
 let thehobbit = new Book("The Hobbit", "Tolkien", 430, bookStatus[0]);
@@ -197,7 +197,7 @@ function createDeleteBookButton(parent)
     parent.append(btn);
 }
 
-function createChangeStatusButton(parent)
+function createChangeStatusButton(parent, status)
 {
     const form = document.createElement("form");
     form.classList.add("update_status");
@@ -210,6 +210,8 @@ function createChangeStatusButton(parent)
     readInput.setAttribute("type", "radio");
     readInput.setAttribute("name", "status");
     readInput.setAttribute("value", bookStatus[2]);
+    if (status === bookStatus[2])
+        readInput.checked = true;
 
     const readLabel = document.createElement("label");
     readLabel.setAttribute("for", "read");
@@ -220,20 +222,24 @@ function createChangeStatusButton(parent)
     currently_readingInput.setAttribute("type", "radio");
     currently_readingInput.setAttribute("name", "status");
     currently_readingInput.setAttribute("value", bookStatus[1]);
+    if (status === bookStatus[1])
+        currently_readingInput.checked = true;
 
     const currently_readingLabel = document.createElement("label");
     currently_readingLabel.setAttribute("for", "currently_reading");
-    currently_readingLabel.textContent = "currently reading";
+    currently_readingLabel.textContent = "Currently reading";
 
     const div3 = document.createElement("div");
     const to_readInput = document.createElement("input");
     to_readInput.setAttribute("type", "radio");
     to_readInput.setAttribute("name", "status");
     to_readInput.setAttribute("value", bookStatus[0]);
+    if (status === bookStatus[0])
+        to_readInput.checked = true;
 
     const to_readLabel = document.createElement("label");
     to_readLabel.setAttribute("for", "to_read");
-    to_readLabel.textContent = "to read";
+    to_readLabel.textContent = "To read";
 
     const update = document.createElement("button");
     update.setAttribute("type", "submit");
@@ -242,7 +248,7 @@ function createChangeStatusButton(parent)
 
     parent.append(form);
     form.append(fieldset, update);
-    fieldset.append(legend, div1, div2, div3);
+    fieldset.append(legend, div3, div2, div1);
     div1.append(readInput, readLabel);
     div2.append(currently_readingInput, currently_readingLabel);
     div3.append(to_readInput, to_readLabel);
