@@ -93,12 +93,12 @@ function updateStatus(form)
 function replaceIndexes()
 {
     let index = 0;
-    let deleteBtnList = document.querySelectorAll(".delete");
-    for (const key in deleteBtnList)
+    let bookList = document.querySelectorAll(".book");
+    for (const key in bookList)
     {
-        if (Object.prototype.hasOwnProperty.call(deleteBtnList, key))
+        if (Object.prototype.hasOwnProperty.call(bookList, key))
         {
-            const element = deleteBtnList[key];
+            const element = bookList[key];
             if (element.classList[1] != index)
                 element.classList.replace(element.classList[1], index);
             index++;
@@ -118,6 +118,10 @@ function addBookToDOM(book)
 {
     const domEl = document.createElement("div");
     domEl.classList.add("book");
+
+    if (myLibrary.length < 1)
+        return;
+    domEl.classList.add(myLibrary.length - 1);
     let buffer = [];
     for (const property in book)
     {
@@ -184,9 +188,6 @@ function createDeleteBookButton(parent)
 {
     const btn = document.createElement("button");
     btn.classList.add("delete");
-    if (myLibrary.length < 1)
-        return;
-    btn.classList.add(myLibrary.length - 1);
     btn.textContent = "delete";
     parent.append(btn);
 }
