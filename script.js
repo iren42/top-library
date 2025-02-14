@@ -26,6 +26,10 @@ Book.prototype.info = function ()
         return (this.title + " by " + this.author + ", " + this.nb_pages + " currently reading");
 }
 
+Book.prototype.setStatus = function(newStatus) {
+    this.status = newStatus;
+}
+
 showButton.addEventListener("click", () =>
 {
     dialog.showModal();
@@ -86,10 +90,10 @@ function updateStatus(form)
     // update DOM
     let oldStatus = form.parentElement.querySelector("span.status");
     oldStatus.textContent = newStatus;
+
     // update myLibrary array
     let index = Number(form.parentElement.querySelector(".delete").classList[1]);
-    myLibrary.at(index).status = newStatus;
-    console.table(myLibrary);
+    myLibrary.at(index).setStatus(newStatus);
 }
 
 function replaceIndexes()
