@@ -1,5 +1,5 @@
 const myLibrary = [];
-const bookStatus = ["to_read", "currently_reading", "read"];
+const BOOKSTATUS = ["to_read", "currently_reading", "read"];
 
 const dialog = document.querySelector("dialog");
 const showButton = document.querySelector("#showDialog");
@@ -7,28 +7,37 @@ const closeButton = document.querySelector("button[value='close']");
 const form = document.querySelector("#book_form");
 const library = document.querySelector("#library");
 
-function Book(title, author, nb_pages, status)
+class Book
 {
     // the constructor...
-    this.title = title;
-    this.author = author;
-    this.nb_pages = nb_pages;
-    this.status = status;
-}
+    constructor(title, author, nb_pages, status)
+    {
+        this._title = title;
+        this._author = author;
+        this._nb_pages = nb_pages;
+        this._status = status;
+    }
 
-Book.prototype.info = function ()
-{
-    if (this.read == bookStatus[2])
-        return (this.title + " by " + this.author + ", " + this.nb_pages + " has been read");
-    else if (this.read === bookStatus[0])
-        return (this.title + " by " + this.author + ", " + this.nb_pages + " has not been read yet");
-    else
-        return (this.title + " by " + this.author + ", " + this.nb_pages + " currently reading");
-}
+    get status()
+    {
+        return (this._status);
+    }
 
-Book.prototype.setStatus = function (newStatus)
-{
-    this.status = newStatus;
+    set status(newStatus)
+    {
+        if (BOOKSTATUS.indexOf(newStatus) !== -1)
+            this._status = newStatus;
+    }
+
+    info()
+    {
+        if (this._status == BOOKSTATUS[2])
+            return (this._title + " by " + this._author + ", " + this._nb_pages + " has been read");
+        else if (this._status === BOOKSTATUS[0])
+            return (this._title + " by " + this._author + ", " + this._nb_pages + " has not been read yet");
+        else
+            return (this._title + " by " + this._author + ", " + this._nb_pages + " currently reading");
+    }
 }
 
 showButton.addEventListener("click", () =>
@@ -89,7 +98,8 @@ function updateStatus(form)
 
     // update myLibrary array
     let index = Number(form.parentElement.querySelector(".delete").classList[1]);
-    myLibrary.at(index).setStatus(newStatus);
+    const bookToModify = myLibrary.at(index);
+    bookToModify.status = newStatus;
 }
 
 function replaceIndexes()
@@ -156,9 +166,9 @@ function addBookToDOM(book)
     createChangeStatusButton(domEl, book.status);
 }
 
-let thehobbit = new Book("The Hobbit", "Tolkien", 430, bookStatus[0]);
-let thelightshop = new Book("The Light Shop", "IDK", 230, bookStatus[1]);
-let misaeng = new Book("Misaeng", "IDK", 21, bookStatus[1]);
+let thehobbit = new Book("The Hobbit", "Tolkien", 430, BOOKSTATUS[0]);
+let thelightshop = new Book("The Light Shop", "IDK", 230, BOOKSTATUS[1]);
+let misaeng = new Book("Misaeng", "IDK", 21, BOOKSTATUS[1]);
 
 addBookToLibrary(myLibrary, thehobbit);
 addBookToLibrary(myLibrary, thelightshop);
@@ -209,8 +219,8 @@ function createChangeStatusButton(parent, status)
     const readInput = document.createElement("input");
     readInput.setAttribute("type", "radio");
     readInput.setAttribute("name", "status");
-    readInput.setAttribute("value", bookStatus[2]);
-    if (status === bookStatus[2])
+    readInput.setAttribute("value", BOOKSTATUS[2]);
+    if (status === BOOKSTATUS[2])
         readInput.checked = true;
 
     const readLabel = document.createElement("label");
@@ -221,8 +231,8 @@ function createChangeStatusButton(parent, status)
     const currently_readingInput = document.createElement("input");
     currently_readingInput.setAttribute("type", "radio");
     currently_readingInput.setAttribute("name", "status");
-    currently_readingInput.setAttribute("value", bookStatus[1]);
-    if (status === bookStatus[1])
+    currently_readingInput.setAttribute("value", BOOKSTATUS[1]);
+    if (status === BOOKSTATUS[1])
         currently_readingInput.checked = true;
 
     const currently_readingLabel = document.createElement("label");
@@ -233,8 +243,8 @@ function createChangeStatusButton(parent, status)
     const to_readInput = document.createElement("input");
     to_readInput.setAttribute("type", "radio");
     to_readInput.setAttribute("name", "status");
-    to_readInput.setAttribute("value", bookStatus[0]);
-    if (status === bookStatus[0])
+    to_readInput.setAttribute("value", BOOKSTATUS[0]);
+    if (status === BOOKSTATUS[0])
         to_readInput.checked = true;
 
     const to_readLabel = document.createElement("label");
