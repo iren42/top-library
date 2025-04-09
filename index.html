@@ -16,8 +16,8 @@
             <input type="text" id="title" name="title" required>
             <label for="author">Author: </label>
             <input type="text" id="author" name="author" required>
-            <label for="nb_pages">Number of pages: </label>
-            <input type="number" id="nb_pages" name="nb_pages" required>
+            <label for="nb_pages">Number of pages (0 if unknown): </label>
+            <input type="number"  value=0 min="0" id="nb_pages" name="nb_pages" required>
 
             <fieldset>
                 <legend>Status:</legend>
