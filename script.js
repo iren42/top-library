@@ -187,6 +187,17 @@ const DOMController = (function() {
 		return (newBook);
 	}
 
+	function checkNumberOfPages() {
+		const nbOfPagesField = document.querySelector("#nb_pages");
+		if (!nbOfPagesField)
+			throw new Error("No number of pages input");
+		if (nbOfPagesField.value <= 0) {
+			nbOfPagesField.setCustomValidity("Positive number only");
+		}
+		else
+			nbOfPagesField.setCustomValidity("");
+	}
+
 	const showButton = document.querySelector("#showDialog");
 	if (!showButton)
 		throw new Error("No show dialog button");
@@ -239,6 +250,12 @@ const DOMController = (function() {
 		}
 	})
 
+	const nbOfPagesField = document.querySelector("#nb_pages");
+	if (!nbOfPagesField)
+		throw new Error("No number of pages input");
+	nbOfPagesField.addEventListener("change", () => {
+		checkNumberOfPages();
+	});
 
 	return ({
 		updateScreen,
