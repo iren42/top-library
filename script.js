@@ -191,7 +191,7 @@ const DOMController = (function() {
 		const nbOfPagesField = document.querySelector("#nb_pages");
 		if (!nbOfPagesField)
 			throw new Error("No number of pages input");
-		if (nbOfPagesField.value <= 0) {
+		if (nbOfPagesField.value < 0) {
 			nbOfPagesField.setCustomValidity("Positive number only");
 		}
 		else
